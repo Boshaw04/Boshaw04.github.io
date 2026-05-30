@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的个人网站</title>
+<style>
+  /* ══════════════════════════════════════
+     RESET & BASE
+     ══════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #0a0a0f;
+    color: #e0e0e0;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  /* ══════════════════════════════════════
+     NAVIGATION
+     ══════════════════════════════════════ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 1rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,15,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  nav .logo { font-size: 1.3rem; font-weight: 700; color: #6C5CFF; }
+  nav ul { display: flex; gap: 2rem; list-style: none; }
+  nav ul li a { font-size: 0.9rem; transition: color 0.3s; }
+  nav ul li a:hover { color: #6C5CFF; }
+
+  /* ══════════════════════════════════════
+     HERO SECTION
+     ══════════════════════════════════════ */
+  #hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    padding: 6rem 2rem 4rem;
+  }
+  #hero::before {
+    content: '';
+    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(108,92,255,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(0,200,150,0.06) 0%, transparent 50%);
+    animation: bgFloat 20s ease-in-out infinite;
+  }
+  @keyframes bgFloat {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-2%, 1%); }
+  }
+  .hero-content { position: relative; text-align: center; max-width: 700px; z-index: 1; }
+  .hero-badge {
+    display: inline-block; padding: 0.4rem 1.2rem;
+    border: 1px solid rgba(108,92,255,0.4); border-radius: 50px;
+    font-size: 0.85rem; color: #6C5CFF; margin-bottom: 2rem;
+  }
+  .hero-content h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1.2;
+    background: linear-gradient(135deg, #fff 0%, #b8b0ff 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+  }
+  .hero-content p {
+    font-size: 1.2rem; color: #999; margin-bottom: 2.5rem; max-width: 500px;
+    margin-left: auto; margin-right: auto;
+  }
+  .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    padding: 0.8rem 2rem; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; transition: all 0.3s; border: none;
+  }
+  .btn-primary { background: #6C5CFF; color: #fff; }
+  .btn-primary:hover { background: #5B4AE0; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,255,0.3); }
+  .btn-outline { background: transparent; color: #ccc; border: 1px solid rgba(255,255,255,0.2); }
+  .btn-outline:hover { border-color: #6C5CFF; color: #6C5CFF; transform: translateY(-2px); }
+
+  /* ══════════════════════════════════════
+     SECTIONS COMMON
+     ══════════════════════════════════════ */
+  section { padding: 5rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-title {
+    font-size: 2rem; font-weight: 700; text-align: center; margin-bottom: 1rem;
+  }
+  .section-subtitle { text-align: center; color: #777; margin-bottom: 3.5rem; font-size: 1rem; }
+
+  /* ══════════════════════════════════════
+     ABOUT SECTION
+     ══════════════════════════════════════ */
+  #about .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
+  }
+  .about-text h3 { font-size: 1.5rem; margin-bottom: 1rem; color: #fff; }
+  .about-text p { color: #999; margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+  /* Skill bars */
+  .skill-item { margin-bottom: 1.2rem; }
+  .skill-label { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-size: 0.9rem; }
+  .skill-bar {
+    height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+  .skill-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, #6C5CFF, #8B7CFF);
+    transition: width 1s ease;
+  }
+
+  /* Info cards */
+  .info-cards { display: grid; gap: 1rem; }
+  .info-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 1.5rem; transition: all 0.3s;
+  }
+  .info-card:hover { border-color: rgba(108,92,255,0.3); transform: translateY(-2px); }
+  .info-card .icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .info-card h4 { font-size: 1rem; margin-bottom: 0.3rem; color: #fff; }
+  .info-card span { font-size: 0.85rem; color: #777; }
+
+  /* ══════════════════════════════════════
+     PROJECTS SECTION
+     ══════════════════════════════════════ */
+  #projects { background: rgba(255,255,255,0.015); }
+  .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+  .project-card {
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px; overflow: hidden; transition: all 0.3s;
+  }
+  .project-card:hover {
+    border-color: rgba(108,92,255,0.3); transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  .project-image {
+    height: 180px; background: linear-gradient(135deg, rgba(108,92,255,0.2), rgba(0,200,150,0.1));
+    display: flex; align-items: center; justify-content: center; font-size: 3rem;
+  }
+  .project-info { padding: 1.5rem; }
+  .project-info h3 { font-size: 1.15rem; color: #fff; margin-bottom: 0.5rem; }
+  .project-info p { font-size: 0.9rem; color: #888; margin-bottom: 1rem; line-height: 1.5; }
+  .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tag {
+    padding: 0.25rem 0.8rem; border-radius: 50px;
+    font-size: 0.75rem; background: rgba(108,92,255,0.15); color: #a89fff;
+  }
+
+  /* ══════════════════════════════════════
+     BLOG SECTION
+     ══════════════════════════════════════ */
+  .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+  .blog-card {
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px; padding: 2rem; transition: all 0.3s; cursor: pointer;
+  }
+  .blog-card:hover { border-color: rgba(108,92,255,0.3); transform: translateY(-2px); }
+  .blog-date { font-size: 0.8rem; color: #6C5CFF; margin-bottom: 0.8rem; }
+  .blog-card h3 { font-size: 1.15rem; color: #fff; margin-bottom: 0.8rem; }
+  .blog-card p { font-size: 0.9rem; color: #888; line-height: 1.6; }
+
+  /* ══════════════════════════════════════
+     CONTACT SECTION
+     ══════════════════════════════════════ */
+  #contact { text-align: center; }
+  .contact-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin: 2rem 0; }
+  .contact-link {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    padding: 1.5rem 2rem; border-radius: 12px;
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s; min-width: 120px;
+  }
+  .contact-link:hover { border-color: rgba(108,92,255,0.3); transform: translateY(-2px); }
+  .contact-link .emoji { font-size: 1.8rem; }
+  .contact-link span { font-size: 0.85rem; color: #999; }
+  .contact-link strong { font-size: 0.95rem; color: #fff; }
+
+  /* ══════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════ */
+  footer {
+    text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.85rem; color: #555;
+  }
+
+  /* ══════════════════════════════════════
+     RESPONSIVE
+     ══════════════════════════════════════ */
+  @media (max-width: 768px) {
+    nav ul { gap: 1rem; }
+    nav ul li a { font-size: 0.8rem; }
+    #about .about-grid { grid-template-columns: 1fr; }
+    .hero-content h1 { font-size: 2rem; }
+    section { padding: 3rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav>
+  <div class="logo">MySite</div>
+  <ul>
+    <li><a href="#hero">首页</a></li>
+    <li><a href="#about">关于</a></li>
+    <li><a href="#projects">项目</a></li>
+    <li><a href="#blog">博客</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-badge">✨ 技术爱好者 / 终身学习者</div>
+    <h1>你好，我是<br>雾中诗</h1>
+    <p>热爱编程与创造，用代码构建有趣的东西。探索 AI、Web 开发和自动化的一切可能。</p>
+    <div class="hero-buttons">
+      <a href="#projects" class="btn btn-primary">查看作品</a>
+      <a href="#contact" class="btn btn-outline">联系我</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<section id="about">
+  <div class="container">
+    <h2 class="section-title">关于我</h2>
+    <p class="section-subtitle">不断学习，不断成长</p>
+    <div class="about-grid">
+      <div class="about-text">
+        <h3>👋 很高兴认识你</h3>
+        <p>
+          我是一名技术爱好者，对编程、人工智能和自动化充满热情。
+          喜欢探索各种新技术，把想法变成实际可用的工具。
+        </p>
+        <p>
+          相信技术可以让生活更高效、更有趣。不断学习，不断创造，享受用代码解决问题的过程。
+        </p>
+
+        <h3 style="margin-top:2rem">🛠️ 技能</h3>
+        <div class="skill-item">
+          <div class="skill-label"><span>HTML / CSS / JavaScript</span><span>逐步学习中</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:72%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-label"><span>Python</span><span>逐步学习中</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:68%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-label"><span>React / Vue</span><span>逐步学习中</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:45%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-label"><span>AI / LLM 应用</span><span>逐步学习中</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div>
+        </div>
+      </div>
+
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="icon">🎓</div>
+          <h4>学习方式</h4>
+          <span>自学成才 · 实践中成长</span>
+        </div>
+        <div class="info-card">
+          <div class="icon">💼</div>
+          <h4>方向</h4>
+          <span>Web 开发 · AI 应用 · 自动化</span>
+        </div>
+        <div class="info-card">
+          <div class="icon">📍</div>
+          <h4>所在地</h4>
+          <span>中国</span>
+        </div>
+        <div class="info-card">
+          <div class="icon">🎯</div>
+          <h4>兴趣</h4>
+          <span>开源项目 · 自动化工具 · AI 探索</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PROJECTS ═══════════ -->
+<section id="projects">
+  <div class="container">
+    <h2 class="section-title">项目作品</h2>
+    <p class="section-subtitle">把想法变成现实</p>
+    <div class="project-grid">
+      <div class="project-card">
+        <div class="project-image">🦀</div>
+        <div class="project-info">
+          <h3>桌面 AI 助手</h3>
+          <p>一个可爱的桌面宠物，实时显示 AI 工作状态，支持多种表情和交互。</p>
+          <div class="project-tags">
+            <span class="tag">Python</span><span class="tag">GUI</span><span class="tag">AI</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-image">📚</div>
+        <div class="project-info">
+          <h3>六级备考资料生成器</h3>
+          <p>自动搜集历年真题，整理高频词汇、写作模板和翻译预测，一键生成复习文档。</p>
+          <div class="project-tags">
+            <span class="tag">Python</span><span class="tag">Web Scraping</span><span class="tag">Word</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-image">🎬</div>
+        <div class="project-info">
+          <h3>AI 视频生成环境</h3>
+          <p>基于 MoneyPrinterTurbo 部署的 AI 自动视频生成系统，输入主题即可生成短视频。</p>
+          <div class="project-tags">
+            <span class="tag">Python</span><span class="tag">AI</span><span class="tag">FFmpeg</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ BLOG ═══════════ -->
+<section id="blog">
+  <div class="container">
+    <h2 class="section-title">博客文章</h2>
+    <p class="section-subtitle">记录学习与思考</p>
+    <div class="blog-grid">
+      <div class="blog-card">
+        <div class="blog-date">2026-05-30</div>
+        <h3>如何用 Claude Code 打造自动化工作流</h3>
+        <p>从零开始配置 Claude Code，创建自定义 Skill，让 AI 帮你处理重复性办公任务。</p>
+      </div>
+      <div class="blog-card">
+        <div class="blog-date">2026-05-25</div>
+        <h3>大学生如何高效备考英语六级</h3>
+        <p>结合 AI 工具整理历年真题规律，分享高频词汇和写作翻译的备考策略。</p>
+      </div>
+      <div class="blog-card">
+        <div class="blog-date">2026-05-20</div>
+        <h3>Python 桌面应用开发入门</h3>
+        <p>用 tkinter 和 Pillow 打造一个属于自己的桌面小工具，从设计到实现全流程。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section id="contact">
+  <div class="container">
+    <h2 class="section-title">联系我</h2>
+    <p class="section-subtitle">欢迎交流与合作</p>
+    <div class="contact-links">
+      <a href="mailto:1282974588@qq.com" class="contact-link">
+        <span class="emoji">📧</span>
+        <strong>Email</strong>
+        <span>1282974588@qq.com</span>
+      </a>
+      <a href="https://github.com/Boshaw04" class="contact-link" target="_blank">
+        <span class="emoji">💻</span>
+        <strong>GitHub</strong>
+        <span>@Boshaw04</span>
+      </a>
+      <a href="#" class="contact-link">
+        <span class="emoji">💬</span>
+        <strong>微信</strong>
+        <span>your_wechat</span>
+      </a>
+      <a href="#" class="contact-link">
+        <span class="emoji">📱</span>
+        <strong>公众号</strong>
+        <span>扫码关注</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <p>&copy; 2026 My Personal Site. Built with ❤️ and Claude Code.</p>
+</footer>
+
+<script>
+  // Scroll reveal animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.project-card, .blog-card, .info-card, .contact-link').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'all 0.6s ease-out';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
