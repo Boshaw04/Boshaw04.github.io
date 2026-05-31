@@ -421,9 +421,9 @@ const TOPIC='boshaw-menu-order-2026';
 
 function initMQTT(){
   const script=document.createElement('script');
-  script.src='https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js';
+  script.src='https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js';
   script.onload=()=>{
-    mqttClient=mqtt.connect('wss://broker.emqx.io:8084/mqtt');
+    mqttClient=mqtt.connect('wss://broker-cn.emqx.io:8084/mqtt');
     const isReceiver=location.search.includes('receive');
     mqttClient.on('connect',()=>{
       console.log('MQTT connected');
